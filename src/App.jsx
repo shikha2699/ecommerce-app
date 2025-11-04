@@ -16,7 +16,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmation from './pages/OrderConfirmation';
 
-// World-class ecommerce theme inspired by premium brands
+// World-class ecommerce theme inspired 
 const theme = createTheme({
   palette: {
     mode: 'light',
