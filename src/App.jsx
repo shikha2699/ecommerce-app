@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
 import Collections from './pages/Collections';
 import About from './pages/About';
 import Cart from './pages/Cart';
@@ -478,16 +479,10 @@ const AppLayout = () => {
           <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/products" replace />} />
           <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/products" replace />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/about" element={<About />} />
-          <Route 
-            path="/cart" 
-            element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/cart" element={<Cart />} />
           <Route 
             path="/checkout" 
             element={

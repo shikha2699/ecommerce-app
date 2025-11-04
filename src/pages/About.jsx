@@ -30,7 +30,6 @@ const About = () => {
   // Handle team member click - removed intentional error throwing
   const handleTeamMemberClick = (member) => {
     // Team member click functionality can be implemented here
-    console.log(`Clicked on ${member.name}`);
   };
 
   const values = [
@@ -150,13 +149,13 @@ const About = () => {
                   A Legacy of Luxury
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  Founded in 2008, Luxury Vault began as a small boutique with a big vision: to bring the world's finest luxury products to discerning customers who appreciate quality, craftsmanship, and timeless elegance.
+                  Founded in 2008, LUXE began as a small boutique with a big vision: to bring the world's finest luxury products to discerning customers who appreciate quality, craftsmanship, and timeless elegance.
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.8, fontSize: '1.1rem' }}>
                   What started as a passion project has grown into a global destination for luxury shopping, serving over 50,000 satisfied customers worldwide. Our commitment to excellence remains unchanged - we still personally curate every product, ensuring it meets our exacting standards.
                 </Typography>
                 <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: '1.1rem' }}>
-                  Today, Luxury Vault continues to redefine luxury e-commerce, combining cutting-edge technology with the personal touch that makes every shopping experience truly exceptional.
+                  Today, LUXE continues to redefine luxury e-commerce, combining cutting-edge technology with the personal touch that makes every shopping experience truly exceptional.
                 </Typography>
               </Box>
             </Fade>

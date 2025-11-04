@@ -40,8 +40,6 @@ const OrderConfirmation = () => {
 
   // Handle view order - removed intentional error throwing
   const handleViewOrder = () => {
-    // In a real app, this would navigate to an order details page
-    console.log('View order details:', orderId);
   };
 
   // Format date

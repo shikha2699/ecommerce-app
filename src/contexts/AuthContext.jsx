@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }) => {
       
       // Check if fail mode is enabled from navbar checkbox
       const failModeEnabled = attemptTracker.getFailMode();
-      console.log(`Login - Fail mode enabled: ${failModeEnabled}`);
       
       // Simulate API call delay for realistic UX
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -98,8 +97,8 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true, user: userData };
     } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+      // console.error('Login error:', error);
+      // throw error;
     } finally {
       setLoading(false);
     }
@@ -112,7 +111,6 @@ export const AuthProvider = ({ children }) => {
       
       // Check if fail mode is enabled from navbar checkbox
       const failModeEnabled = attemptTracker.getFailMode();
-      console.log(`Signup - Fail mode enabled: ${failModeEnabled}`);
       
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -189,11 +187,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function - implements fail/success pattern
+  // Logout function - implements fail/success pattern with streaming support
   const logout = async () => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Logout - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -215,6 +212,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('ecommerce_user');
     setUser(null);
     setIsAuthenticated(false);
+    
+    // Show success message
+    showSuccess('Logged out successfully!');
   };
 
   // Context value object

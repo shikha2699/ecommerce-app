@@ -101,7 +101,6 @@ const Login = () => {
       // Navigate to products page on successful login
       navigate('/products');
     } catch (error) {
-      console.error('Login failed:', error);
       setSubmitError(error.message || 'Login failed. Please try again.');
       // Don't navigate - stay on login page when login fails
     }
@@ -145,7 +144,7 @@ const Login = () => {
                     maxWidth: 500,
                   }}
                 >
-                  Sign in to your Luxury Vault account and continue your journey through our curated collection of premium products.
+                  Sign in to your LUXE account and continue your journey through our curated collection of premium products.
                 </Typography>
                 
                 {/* Features */}
@@ -219,7 +218,7 @@ const Login = () => {
                     Sign In
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Access your Luxury Vault account
+                    Access your LUXE account
                   </Typography>
                 </Box>
 

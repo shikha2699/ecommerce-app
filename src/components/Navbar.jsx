@@ -67,8 +67,8 @@ const Navbar = () => {
       await logout();
       handleUserMenuClose();
       navigate('/products');
-    } catch (error) {
-      console.error('Logout failed:', error);
+    } catch (e) {
+      console.log('Logout failed:', e);
       // Error is already handled by AuthContext
     }
   };
@@ -130,7 +130,7 @@ const Navbar = () => {
                 }}
                 onClick={() => handleNavigation('/products')}
               >
-                Luxury Vault
+                LUXE
               </Typography>
             </Box>
 
@@ -297,7 +297,6 @@ const Navbar = () => {
                   <Checkbox
                     checked={failModeEnabled}
                     onChange={(e) => setFailMode(e.target.checked)}
-                    id="fail-mode-checkbox"
                   />
                 }
                 sx={{ 

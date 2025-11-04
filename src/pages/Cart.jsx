@@ -67,7 +67,6 @@ const Cart = () => {
   const handleCheckout = async () => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Checkout navigation - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -93,7 +92,6 @@ const Cart = () => {
   const handleContinueShopping = async () => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Continue shopping navigation - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -233,7 +231,6 @@ const Cart = () => {
                   cursor: 'pointer',
                   '&:hover': {
                     backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                    borderColor: 'rgba(0, 0, 0, 0.4)',
                     transform: 'scale(1.05)',
                   },
                   '&:active': {

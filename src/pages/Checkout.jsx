@@ -67,19 +67,16 @@ const Checkout = () => {
 
   // Handle shipping form changes - updated for new component
   const handleShippingChange = useCallback((field, value) => {
-    console.log(`Shipping field ${field} changed to:`, value); // Debug log
     
     // Use functional update to ensure state consistency
     setShippingData(prev => {
       const newData = { ...prev, [field]: value };
-      console.log('Updated shipping data:', newData); // Debug log
       return newData;
     });
   }, []);
 
   // Handle payment form changes - updated for new component
   const handlePaymentChange = useCallback((field, value) => {
-    console.log(`Payment field ${field} changed to:`, value); // Debug log
     
     setPaymentData(prev => ({ ...prev, [field]: value }));
   }, []);
@@ -171,8 +168,6 @@ const Checkout = () => {
       // Check if fail mode is enabled from navbar checkbox
       // This allows developers to toggle error generation for testing
       const failModeEnabled = attemptTracker.getFailMode();
-      
-      console.log(`Order placement - Fail mode enabled: ${failModeEnabled}`);
       
       // Generate error based on checkbox flag in navbar
       // When "Test Mode" is checked, orders will always fail for testing purposes

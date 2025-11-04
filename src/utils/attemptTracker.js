@@ -17,7 +17,7 @@ class AttemptTracker {
       const saved = localStorage.getItem(this.storageKey);
       return saved ? JSON.parse(saved) : {};
     } catch (error) {
-      // console.error('Error loading attempt counts:', error);
+      // Error loading attempt counts.
       return {};
     }
   }
@@ -27,7 +27,7 @@ class AttemptTracker {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(this.counts));
     } catch (error) {
-      // console.error('Error saving attempt counts:', error);
+      // Error saving attempt counts.
     }
   }
 
@@ -49,7 +49,7 @@ class AttemptTracker {
       const saved = localStorage.getItem('ecommerce_fail_mode');
       return saved ? JSON.parse(saved) : false; // Default to false (success mode)
     } catch (error) {
-      // console.error('Error loading fail mode setting:', error);
+      // Error loading fail mode setting.
       return false;
     }
   }
@@ -59,7 +59,7 @@ class AttemptTracker {
     try {
       localStorage.setItem('ecommerce_fail_mode', JSON.stringify(this.failModeEnabled));
     } catch (error) {
-      // console.error('Error saving fail mode setting:', error);
+      // Error saving fail mode setting.
     }
   }
 
@@ -67,7 +67,6 @@ class AttemptTracker {
   toggleFailMode() {
     this.failModeEnabled = !this.failModeEnabled;
     this.saveFailMode();
-    console.log(`Fail mode ${this.failModeEnabled ? 'enabled' : 'disabled'}`);
     return this.failModeEnabled;
   }
 
@@ -75,7 +74,6 @@ class AttemptTracker {
   setFailMode(enabled) {
     this.failModeEnabled = Boolean(enabled);
     this.saveFailMode();
-    console.log(`Fail mode ${this.failModeEnabled ? 'enabled' : 'disabled'}`);
     return this.failModeEnabled;
   }
 

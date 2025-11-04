@@ -32,10 +32,6 @@ const Collections = () => {
       try {
         const products = await productAPI.getProducts();
         
-        // Get unique categories from the API data
-        const availableCategories = [...new Set(products.map(p => p.category))];
-        console.log('Available categories:', availableCategories);
-        
         // Create curated collections with proper category mapping
         const collectionsData = [
           {
@@ -94,7 +90,6 @@ const Collections = () => {
           setCollections(validCollections);
         }
         
-        console.log('Collections data:', validCollections);
       } catch (error) {
         console.error('Error fetching collections:', error);
       }
@@ -165,7 +160,6 @@ const Collections = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Explore Collection button clicked!');
                 handleViewCollection(collection);
               }}
               sx={{

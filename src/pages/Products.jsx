@@ -36,16 +36,16 @@ import {
   ViewList as ViewListViewIcon,
   KeyboardArrowUp as ArrowUpIcon,
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { productAPI } from '../services/api';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
 import attemptTracker from '../utils/attemptTracker';
 import { useSnackbar } from '../contexts/SnackbarContext';
 
 const Products = () => {
-  const { addToCart, cartItems } = useCart();
-  const { isAuthenticated } = useAuth();
-  const { showSuccess, showError } = useSnackbar();
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { showError } = useSnackbar();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -118,7 +118,6 @@ const Products = () => {
 
   // Handle add to cart - now uses the fail/success pattern from CartContext
   const handleAddToCart = async (product) => {
-    console.log('Products: Adding product to cart', product);
     try {
       await addToCart(product, 1);
       // Note: The snackbar is now handled by the CartContext
@@ -140,7 +139,6 @@ const Products = () => {
     
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Search - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -168,7 +166,6 @@ const Products = () => {
     
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Category selection - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -199,7 +196,6 @@ const Products = () => {
     
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Sort selection - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -245,10 +241,7 @@ const Products = () => {
   // Premium product card component
   const ProductCard = ({ product }) => (
     <Card 
-      onClick={(e) => {
-        console.log('Card clicked!');
-        e.stopPropagation();
-      }}
+      onClick={() => navigate(`/product/${product.id}`)}
       sx={{ 
         height: 500, 
         display: 'flex', 
@@ -256,6 +249,7 @@ const Products = () => {
         position: 'relative',
         overflow: 'hidden',
         transition: 'all 0.3s ease-in-out',
+        cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.12)',
@@ -396,20 +390,15 @@ const Products = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('Button clicked directly!');
-              console.log('Product ID:', product.id);
-              console.log('Product Title:', product.title);
               handleAddToCart(product);
             }}
             onMouseDown={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('Button mouse down!');
             }}
             onMouseUp={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('Button mouse up!');
             }}
             sx={{ 
               textTransform: 'none',
@@ -600,7 +589,6 @@ const Products = () => {
                     try {
                       // Check if fail mode is enabled from navbar checkbox
                       const failModeEnabled = attemptTracker.getFailMode();
-                      console.log(`View mode change (grid) - Fail mode enabled: ${failModeEnabled}`);
                       
                       // Generate error based on checkbox flag in navbar
                       if (failModeEnabled) {
@@ -637,7 +625,6 @@ const Products = () => {
                     try {
                       // Check if fail mode is enabled from navbar checkbox
                       const failModeEnabled = attemptTracker.getFailMode();
-                      console.log(`View mode change (list) - Fail mode enabled: ${failModeEnabled}`);
                       
                       // Generate error based on checkbox flag in navbar
                       if (failModeEnabled) {

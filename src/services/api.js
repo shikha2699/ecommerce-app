@@ -1,55 +1,54 @@
-import axios from 'axios';
 import attemptTracker from '../utils/attemptTracker';
 
 // Base configuration for API calls
 const API_BASE_URL = 'https://fakestoreapi.com';
 
-// Create axios instance with default configuration
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000, // 10 second timeout
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Helper function to create fetch request with common configuration
+const createFetchRequest = async (endpoint, options = {}) => {
+  const url = `${API_BASE_URL}${endpoint}`;
+  
+  // Default fetch options
+  const defaultOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    timeout: 10000, // Note: fetch doesn't have built-in timeout, we'll implement it
+  };
 
-// Request interceptor for logging and debugging
-apiClient.interceptors.request.use(
-  (config) => {
-    console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
-    return config;
-  },
-  (error) => {
-    // console.error('API Request Error:', error);
-    return Promise.reject(error);
-  }
-);
+  // Merge options
+  const fetchOptions = { ...defaultOptions, ...options };
 
-// Response interceptor for error handling
-apiClient.interceptors.response.use(
-  (response) => {
-    console.log(`API Response: ${response.status} ${response.config.url}`);
-    return response;
-  },
-  (error) => {
-    // console.error('API Response Error:', error);
+  // Create AbortController for timeout functionality
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), fetchOptions.timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    // Check if response is ok (status 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Parse JSON response
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    clearTimeout(timeoutId);
     
-    // Handle different types of errors
-    if (error.response) {
-      // Server responded with error status
-      // console.error('Error Status:', error.response.status);
-      // console.error('Error Data:', error.response.data);
-    } else if (error.request) {
-      // Request was made but no response received
-      // console.error('No response received from server');
-    } else {
-      // Something else happened
-      // console.error('Error setting up request:', error.message);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout. Please try again later.');
     }
     
-    return Promise.reject(error);
+    throw error;
   }
-);
+};
 
 // Product API functions
 export const productAPI = {
@@ -57,10 +56,10 @@ export const productAPI = {
   async getProducts(category = null) {
     try {
       const endpoint = category ? `/products/category/${category}` : '/products';
-      const response = await apiClient.get(endpoint);
+      const products = await createFetchRequest(endpoint);
       
       // Transform the data to match our app's structure
-      const products = response.data.map(product => ({
+      return products.map(product => ({
         id: product.id,
         title: product.title,
         price: product.price,
@@ -73,10 +72,7 @@ export const productAPI = {
         },
         stock: Math.floor(Math.random() * 50) + 10, // Generate random stock for demo
       }));
-      
-      return products;
     } catch (error) {
-      // console.error('Error fetching products:', error);
       throw new Error('Failed to fetch products. Please try again later.');
     }
   },
@@ -84,10 +80,9 @@ export const productAPI = {
   // Fetch product categories
   async getCategories() {
     try {
-      const response = await apiClient.get('/products/categories');
-      return response.data;
+      const categories = await createFetchRequest('/products/categories');
+      return categories;
     } catch (error) {
-      // console.error('Error fetching categories:', error);
       throw new Error('Failed to fetch categories. Please try again later.');
     }
   },
@@ -95,8 +90,7 @@ export const productAPI = {
   // Fetch single product by ID
   async getProduct(id) {
     try {
-      const response = await apiClient.get(`/products/${id}`);
-      const product = response.data;
+      const product = await createFetchRequest(`/products/${id}`);
       
       // Transform the data to match our app's structure
       return {
@@ -113,7 +107,6 @@ export const productAPI = {
         stock: Math.floor(Math.random() * 50) + 10, // Generate random stock for demo
       };
     } catch (error) {
-      // console.error('Error fetching product:', error);
       throw new Error('Failed to fetch product details. Please try again later.');
     }
   },
@@ -159,55 +152,50 @@ export const productAPI = {
 export const paymentAPI = {
   // Simulate payment processing with realistic delays
   async processPayment(paymentData) {
-    try {
-      // Check if fail mode is enabled from navbar checkbox
-      const failModeEnabled = attemptTracker.getFailMode();
-      console.log(`Payment processing - Fail mode enabled: ${failModeEnabled}`);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate payment validation
-      if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv) {
-        throw new Error('Please fill in all payment details');
-      }
-      
-      if (paymentData.cardNumber.length < 16) {
-        throw new Error('Please enter a valid card number');
-      }
-      
-      if (paymentData.cvv.length < 3) {
-        throw new Error('Please enter a valid CVV');
-      }
-      
-      // Generate error based on checkbox flag in navbar
-      if (failModeEnabled) {
-        // Make a real API call that will fail
-        await fetch('/api/payment/process', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(paymentData)
-        });
-        
-        // If we reach here, the API call succeeded (which shouldn't happen), but we still want to fail
-        throw new Error(`Payment processing failed. Please try again.`);
-      }
-      
-      // Generate order ID
-      const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
-      return {
-        success: true,
-        orderId,
-        transactionId: `TXN-${Date.now()}`,
-        amount: paymentData.amount,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error) {
-      // console.error('Payment processing error:', error);
-      throw error;
+    // Check if fail mode is enabled from navbar checkbox
+    const failModeEnabled = attemptTracker.getFailMode();
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Simulate payment validation
+    if (!paymentData.cardNumber || !paymentData.expiryDate || !paymentData.cvv) {
+      throw new Error('Please fill in all payment details');
     }
+    
+    if (paymentData.cardNumber.length < 16) {
+      throw new Error('Please enter a valid card number');
+    }
+    
+    if (paymentData.cvv.length < 3) {
+      throw new Error('Please enter a valid CVV');
+    }
+    
+    // Generate error based on checkbox flag in navbar
+    if (failModeEnabled) {
+      // Make a real API call that will fail
+      await fetch('/api/payment/process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentData)
+      });
+      
+      // If we reach here, the API call succeeded (which shouldn't happen), but we still want to fail
+      throw new Error(`Payment processing failed. Please try again.`);
+    }
+    
+    // Generate order ID
+    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    return {
+      success: true,
+      orderId,
+      transactionId: `TXN-${Date.now()}`,
+      amount: paymentData.amount,
+      timestamp: new Date().toISOString(),
+    };
   },
 };
 
-export default apiClient;
+// Export the helper function for use in other parts of the app if needed
+export { createFetchRequest };

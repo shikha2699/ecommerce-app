@@ -43,7 +43,6 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, quantity = 1) => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Add to cart - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -88,7 +87,6 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Remove from cart - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -106,11 +104,8 @@ export const CartProvider = ({ children }) => {
       throw new Error(errorMessage);
     }
     
-    // Success - remove item from cart (only reaches here if fail mode is disabled)
-    console.log('CartContext: Removing product', productId);
     setCartItems(prevItems => {
       const newItems = prevItems.filter(item => item.id !== productId);
-      console.log('CartContext: Updated cart items', newItems);
       return newItems;
     });
     
@@ -122,7 +117,6 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Update quantity - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
@@ -141,8 +135,6 @@ export const CartProvider = ({ children }) => {
       throw new Error(errorMessage);
     }
     
-    // Success - update quantity (only reaches here if fail mode is disabled)
-    console.log('CartContext: Updating quantity for product', productId, 'to', quantity);
     if (quantity <= 0) {
       await removeFromCart(productId);
       return;
@@ -152,7 +144,6 @@ export const CartProvider = ({ children }) => {
       const newItems = prevItems.map(item =>
         item.id === productId ? { ...item, quantity } : item
       );
-      console.log('CartContext: Updated cart items', newItems);
       return newItems;
     });
   };
@@ -161,7 +152,6 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     // Check if fail mode is enabled from navbar checkbox
     const failModeEnabled = attemptTracker.getFailMode();
-    console.log(`Clear cart - Fail mode enabled: ${failModeEnabled}`);
     
     // Generate error based on checkbox flag in navbar
     if (failModeEnabled) {
